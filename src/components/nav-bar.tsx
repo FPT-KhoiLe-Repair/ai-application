@@ -1,62 +1,106 @@
-// components/nav-bar.tsx
-"use client"
+// src/components/nav-bar.tsx
+"use client";
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import Image
- from "next/image";
-type NavBarProps = {
-    href: string;
-    label: string;
-}
+import Image from "next/image";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
-function NavLink({
-  href,
-  label,
-}: NavBarProps) {
-  const pathname = usePathname();
-  const isActive = pathname === href;
-  
-  return (
-    <Link
-      href = {href}
-      className={cn(
-        "px-4 py-2 rounded-md text-sm font-medium transition-colors",
-        isActive
-          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-md hover:scale-103 transition-all duration-200"
-          : " text-slate-700 rounded-xl font-semibold hover:border-blue-600 hover:shadow-md hover:scale-103 transition-all duration-200"
-      )}
-      >
-        {label}
-      </Link>
-  );
+type NavBarProps = {
+  href: string;
+  label: string;
 };
 
+function NavLink({ href, label }: NavBarProps) {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200",
+        isActive
+          ? "bg-linear-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white shadow-md hover:shadow-lg"
+          : "text-slate-700 hover:bg-slate-100 hover:shadow-sm hover:brightness-90"
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
+
 export function NavBar() {
-    return (
-        <header className="border-b bg-white/80 backdrop-blur dark:bg-black/80">
-          <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-              src="/logo_1.png"           // 📌 thay logo bạn ở đây
-              alt="Logo"
-              width={36}                // size bạn tùy chỉnh
-              height={36}
-              className="rounded-md"    // optional
-              />
-              <span className="text-3xl font-bold tracking-tight from-blue-600 to-indigo-600 bg-linear-to-r bg-clip-text text-transparent">
-                NOVA AI
-              </span>
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="border-b bg-white/90 backdrop-blur-md dark:bg-black/80 sticky top-0 z-50">
+      <div className="mx-auto flex w-full max-w items-center justify-between px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          {/* <Image
+            src="/logo_1.png"
+            alt="NOVA AI Logo"
+            width={32}
+            height={32}
+            className="rounded-md"
+          /> */}
+          <span className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            NOVA AI
+          </span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex gap-2">
+          <NavLink href="/" label="Home" />
+          <NavLink href="/flashcards" label="Flashcards" />
+          <NavLink href="/settings" label="Settings" />
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? (
+            <X className="w-6 h-6 text-slate-700" />
+          ) : (
+            <Menu className="w-6 h-6 text-slate-700" />
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Navigation Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-200 bg-white">
+          <nav className="flex flex-col p-4 space-y-2">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-4 py-3 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              Home
             </Link>
-
-            <nav className="flex gap-2">
-              <NavLink href="/" label="Home" />
-              <NavLink href="/flashcards" label="Flashcards" />
-              <NavLink href="/settings" label="Settings" />
-            </nav>
-          </div>
-        </header>
-
-    );
+            <Link
+              href="/flashcards"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-4 py-3 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              Flashcards
+            </Link>
+            <Link
+              href="/settings"
+              onClick={() => setMobileMenuOpen(false)}
+              className="px-4 py-3 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              Settings
+            </Link>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
 }

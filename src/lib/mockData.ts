@@ -21,9 +21,34 @@ export interface Deck {
 export interface UserStats {
     streak: number;
     totalMastered: number;
-    estimateBand: number;
+    estimatedBand: number;
     studyMinutes: number;
     weeklyGoal: number;
+};
+
+// Mock User Stats
+export const mockUserStats: UserStats = {
+    streak: 3,
+    totalMastered: 120,
+    estimatedBand: 6.5,
+    studyMinutes: 245,
+    weeklyGoal: 7,
+};
+
+export interface UserTargets {
+    streakTarget: number;
+    weeklyStreakTarget: number;
+    totalWordsMasteredTarget: number;
+    estimatedBandTarget: number;
+    studyMinutesTarget: number;
+};
+
+export const mockUserTargets: UserTargets = {
+    streakTarget: 200,
+    weeklyStreakTarget: 7,
+    totalWordsMasteredTarget: 500,
+    estimatedBandTarget: 7.5,
+    studyMinutesTarget: 300,
 };
 
 export interface DailyReview {
@@ -31,15 +56,6 @@ export interface DailyReview {
     title: string;
     wordCount: number;
     deckId: string;
-};
-
-// Mock User Stats
-export const mockUserStats: UserStats = {
-    streak: 3,
-    totalMastered: 120,
-    estimateBand: 6.5,
-    studyMinutes: 245,
-    weeklyGoal: 7,
 };
 
 // Mock IELTS Decks
