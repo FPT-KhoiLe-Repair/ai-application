@@ -77,7 +77,7 @@ export default function FlashcardDashboard() {
   return (
     <div className="flex h-screen bg-slate-50">
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col">
+      <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col fixed left-0 bottom-0 top-0 z-40">
         <SidebarContent />
       </aside>
 
@@ -88,7 +88,7 @@ export default function FlashcardDashboard() {
             className="absolute inset-0 bg-black/50"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 flex flex-col">
+          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 flex flex-col overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b">
               <h2 className="text-lg font-bold text-slate-900">NOVA AI</h2>
               <Button
@@ -104,9 +104,9 @@ export default function FlashcardDashboard() {
         </div>
       )}
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        {/* Mobile Header */}
+      {/* Main Content - Fixed positioning to avoid double scroll */}
+      <main className="flex-1 lg:ml-64">
+        {/* Mobile Header - Sticky */}
         <div className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-10">
           <Button
             variant="ghost"
@@ -119,6 +119,7 @@ export default function FlashcardDashboard() {
           <div className="w-8" />
         </div>
 
+        {/* Scrollable Content Area */}
         <div className="max-w-7xl mx-auto p-4 lg:p-8 space-y-8">
           {/* Hero Section */}
           <section>
@@ -136,16 +137,18 @@ export default function FlashcardDashboard() {
               <StatCard
                 icon={<TrendingUp className="w-5 h-5 text-orange-600" />}
                 label="Study Streak"
-                value={`${stats.streak}`}
-                target={`${targets.streakTarget} days`}
+                value={stats.streak}
+                target={targets.streakTarget}
                 suffix="🔥"
+                unit="days"
                 bgColor="bg-orange-50"
               />
               <StatCard
                 icon={<BookOpen className="w-5 h-5 text-green-600" />}
                 label="Mastered Words"
                 value={stats.totalMastered}
-                target={`${targets.totalWordsMasteredTarget} words`}
+                target={targets.totalWordsMasteredTarget}
+                unit="words"
                 bgColor="bg-green-50"
               />
               <StatCard
@@ -158,8 +161,9 @@ export default function FlashcardDashboard() {
               <StatCard
                 icon={<Clock className="w-5 h-5 text-purple-600" />}
                 label="Study Time"
-                value={`${stats.studyMinutes}m`}
-                target={`${targets.studyMinutesTarget}m`}
+                value={stats.studyMinutes}
+                target={targets.studyMinutesTarget}
+                unit="m"
                 bgColor="bg-purple-50"
               />
             </div>
@@ -290,7 +294,7 @@ export default function FlashcardDashboard() {
       {/* Floating AI Chat Button */}
       <button
         onClick={() => setChatOpen(true)}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group z-50"
         aria-label="AI Chat Assistant"
       >
         <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform duration-200" />
@@ -429,6 +433,7 @@ function StatCard({
   label,
   value,
   target,
+  unit,
   suffix,
   bgColor,
 }: {
@@ -436,6 +441,7 @@ function StatCard({
   label: string;
   value: string | number;
   target: string | number;
+  unit?: string;
   suffix?: string;
   bgColor: string;
 }) {
@@ -447,7 +453,7 @@ function StatCard({
         </div>
         <p className="text-sm text-slate-600 mb-1">{label}</p>
         <p className="text-2xl font-bold text-slate-900">
-          {value} / {target} {suffix && <span className="text-lg">{suffix}</span>}
+          {value} / {target} {unit && <span className="text-lg">{unit}</span>} {suffix && <span className="text-lg">{suffix}</span>}
         </p>
       </CardContent>
     </Card>
